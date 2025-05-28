@@ -3,9 +3,7 @@ import Home from '@/views/Home'
 import About from '@/views/About'
 import Login from '@/views/Login'
 import Record from '@/views/record'
-import { Navigate } from 'react-router-dom'
-
-const token = localStorage.getItem('token')
+import RequireAuth from '@/components/RequireAuth'
 
 const routes = [
   {
@@ -15,7 +13,11 @@ const routes = [
   },
   {
     path: '/',
-    element: token ? <DefaultLayout /> : <Navigate to="/login" />,
+    element: (
+      <RequireAuth>
+        <DefaultLayout />
+      </RequireAuth>
+    ),
     children: [
       {
         path: '',
