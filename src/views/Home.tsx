@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Button, Card, Divider, DotLoading, Toast } from 'antd-mobile'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const AMAP_KEY = '8063855bc72c51c365d84c88c7bb6714' // ← 替换成你自己的 key
 
@@ -11,6 +11,15 @@ const Home = () => {
   const [loading, setLoading] = useState(false)
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null)
   const [address, setAddress] = useState<string>('')
+
+  function useHashQuery() {
+    const { hash } = useLocation()
+    const queryString = hash.includes('?') ? hash.split('?')[1] : ''
+    const params = new URLSearchParams(queryString)
+    return Object.fromEntries(params.entries())
+  }
+
+  const query = useHashQuery()
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -56,7 +65,7 @@ const Home = () => {
         latitude: location.latitude,
         longitude: location.longitude,
         address,
-        userId: '1111111',
+        userId: query.userId || '1111111',
       })
 
       Toast.show({

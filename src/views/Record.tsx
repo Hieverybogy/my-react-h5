@@ -3,6 +3,7 @@ import axios from 'axios'
 import { List, Card, Toast, DatePicker, PullToRefresh, NavBar } from 'antd-mobile'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
+import { useLocation } from 'react-router-dom'
 
 type PunchRecord = {
   id: number
@@ -16,12 +17,21 @@ const Record = () => {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  function useHashQuery() {
+    const { hash } = useLocation()
+    const queryString = hash.includes('?') ? hash.split('?')[1] : ''
+    const params = new URLSearchParams(queryString)
+    return Object.fromEntries(params.entries())
+  }
+
+  const query = useHashQuery()
+
   const fetchData = async (selectedMonth = month) => {
     setLoading(true)
     try {
       const yearMonth = selectedMonth.format('YYYY-MM')
       const res = await axios.get('/api/overtime/monthly', {
-        params: { yearMonth, userId: '1111111' },
+        params: { yearMonth, userId: query.userId || '1111111' },
       })
       setRecords(res.data.result.data || [])
     } catch (err) {
@@ -33,8 +43,6 @@ const Record = () => {
   useEffect(() => {
     fetchData()
   }, [])
-
-  const uniqueDays = new Set(records.map(record => dayjs(record.time).format('YYYY-MM-DD')))
 
   return (
     <div>
@@ -64,7 +72,7 @@ const Record = () => {
       <PullToRefresh onRefresh={() => fetchData()}>
         <div style={{ padding: 16 }}>
           <Card
-            title={`${month.format('YYYY年MM月')}（共${uniqueDays.size}天）`}
+            title={`${month.format('YYYY年MM月')}（共${records.length}天）`}
             style={{ marginBottom: 16 }}
           >
             <List>
