@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Button, Card, Divider, DotLoading, Toast } from 'antd-mobile'
+import { Button, Card, Divider, DotLoading, Toast, DatePicker } from 'antd-mobile'
 import { useNavigate, useLocation } from 'react-router-dom'
+import dayjs from 'dayjs'
 
 const AMAP_KEY = '8063855bc72c51c365d84c88c7bb6714' // ← 替换成你自己的 key
 
@@ -11,6 +12,8 @@ const Home = () => {
   const [loading, setLoading] = useState(false)
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null)
   const [address, setAddress] = useState<string>('')
+  const [visible, setVisible] = useState(false)
+  const [choDate, setChoDate] = useState(() => dayjs())
 
   function useHashQuery() {
     const { hash } = useLocation()
@@ -66,6 +69,7 @@ const Home = () => {
         longitude: location.longitude,
         address,
         userId: query.userId || '1111111',
+        time: choDate,
       })
 
       Toast.show({
@@ -102,6 +106,27 @@ const Home = () => {
         <a className="text-primary" onClick={handleRecord}>
           查看打卡记录
         </a>
+        <Divider />
+        <div style={{ display: 'flex' }}>
+          <span>打卡日期：</span>
+          <span
+            style={{ fontSize: 14, color: '#1677ff', paddingLeft: 12 }}
+            onClick={() => setVisible(true)}
+          >
+            {choDate?.format('YYYY-MM-DD HH:mm:ss') || '--'}
+          </span>
+        </div>
+        <DatePicker
+          title="选择月份"
+          visible={visible}
+          precision="second"
+          onClose={() => setVisible(false)}
+          value={choDate.toDate()}
+          onConfirm={val => {
+            const selected = dayjs(val)
+            setChoDate(selected)
+          }}
+        />
         <Divider />
         <div style={{ marginBottom: 12, fontSize: 14 }}>当前地址：{address || '正在定位...'}</div>
         <Button

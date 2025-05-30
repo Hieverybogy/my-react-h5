@@ -78,8 +78,11 @@ const Record = () => {
             <List>
               {records.map((record, idx) => (
                 <List.Item key={record.id || idx}>
-                  {dayjs(record.punchTime).format('YYYY-MM-DD')} -{' '}
-                  {dayjs(record.punchTime).format('HH:mm:ss')}
+                  <div>
+                    {dayjs(record.punchTime).format('YYYY-MM-DD')} -{' '}
+                    {dayjs(record.punchTime).format('HH:mm:ss')}
+                  </div>
+                  <div className="text-[12px] text-[#999]">{record.address}</div>
                 </List.Item>
               ))}
             </List>
