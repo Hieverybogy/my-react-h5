@@ -2,7 +2,7 @@ import DefaultLayout from '@/layouts/DefaultLayout'
 import Home from '@/views/Home'
 import About from '@/views/About'
 import Login from '@/views/Login'
-import Record from '@/views/record'
+import Record from '@/views/Record'
 import RequireAuth from '@/components/RequireAuth'
 
 const routes = [
