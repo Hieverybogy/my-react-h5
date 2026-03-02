@@ -12,6 +12,10 @@ class WSService {
     let ws_url = import.meta.env.VITE_API_WS_Chat_BASE_PATH
     if (window.location.protocol === 'https:') {
       ws_url = ws_url.replace('ws://', 'wss://')
+      const arr = ws_url.split(':')
+      arr.pop()
+      ws_url = arr.join(':')
+
       console.log(1111111, ws_url)
     }
     this.ws = new WebSocket(`${ws_url}/ws?token=${token}`)
