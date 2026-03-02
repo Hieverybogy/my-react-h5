@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavBar } from 'antd-mobile'
+import 'antd-mobile/es/global'
 import { useLocation, Outlet } from 'react-router-dom'
 import routes from '@/router/routes'
 import { useNavigate } from 'react-router-dom'
